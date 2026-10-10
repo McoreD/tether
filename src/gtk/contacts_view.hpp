@@ -7,7 +7,8 @@
 namespace tether::ui {
 
     // The iPhone's address book, pulled over PBAP.
-    GtkWidget* contacts_view_new(void (*open_thread)(const std::string& thread_key));
+    GtkWidget* contacts_view_new(void (*open_thread)(const std::string& thread_key),
+                                 void (*start_call)(const std::string& number));
 
     // Returns true when the event belonged to this view.
     bool contacts_view_handle_event(const nlohmann::json& event);

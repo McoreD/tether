@@ -2,6 +2,7 @@
 
 #include <gtk/gtk.h>
 #include <nlohmann/json.hpp>
+#include <string>
 
 namespace tether::ui {
 
@@ -13,5 +14,8 @@ namespace tether::ui {
     // The call list is only re-read while the view is on screen. A ringing call
     // still arrives, because the daemon pushes those unasked.
     void calls_view_set_visible(bool visible);
+
+    // Failures come back as bt_call_result, which this view reports.
+    void calls_view_dial(const std::string& number);
 
 } // namespace tether::ui

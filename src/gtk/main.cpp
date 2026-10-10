@@ -276,10 +276,15 @@ namespace {
         g_calls_page = page_frame(calls_view_new(), _("Calls"), "calls");
         gtk_stack_add_titled(GTK_STACK(stack), g_calls_page, "calls", _("Calls"));
         gtk_stack_add_titled(GTK_STACK(stack),
-                             page_frame(contacts_view_new([](const std::string& thread_key) {
-                                            show_view("messages");
-                                            messages_view_open_thread(thread_key);
-                                        }),
+                             page_frame(contacts_view_new(
+                                            [](const std::string& thread_key) {
+                                                show_view("messages");
+                                                messages_view_open_thread(thread_key);
+                                            },
+                                            [](const std::string& number) {
+                                                calls_view_dial(number);
+                                                show_view("calls");
+                                            }),
                                         _("Contacts"),
                                         "contacts"),
                              "contacts",

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-09 20:43-0700\n"
+"POT-Creation-Date: 2026-10-10 13:51-0700\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Czech\n"
@@ -1798,7 +1798,9 @@ msgid "Outgoing"
 msgstr "Odchozí"
 
 #. TRANSLATORS: Button that calls a recent caller back, {} is their name or number.
-#: src/gtk/calls_view.cpp src/tui/calls.cpp
+#. TRANSLATORS: Spoken name of the call button beside a phone number.
+#: src/gtk/calls_view.cpp src/gtk/contacts_view.cpp src/tui/calls.cpp
+#: src/tui/contacts.cpp
 #, c++-format
 msgid "Call {}"
 msgstr "Volat {}"
@@ -1817,7 +1819,7 @@ msgstr ""
 msgid "Number to call"
 msgstr "Číslo k volání"
 
-#: src/gtk/calls_view.cpp src/tui/calls.cpp
+#: src/gtk/calls_view.cpp src/gtk/contacts_view.cpp src/tui/calls.cpp
 msgid "Call"
 msgstr "Volat"
 

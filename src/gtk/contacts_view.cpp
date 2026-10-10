@@ -110,8 +110,6 @@ namespace tether::ui {
                                                }));
             gtk_box_pack_end(GTK_BOX(box), message, FALSE, FALSE, 0);
 
-            // ponytail: availability is read when the card first opens; a link
-            // lost later surfaces as the Calls page's bt_call_result status.
             if (is_tel && g_contacts.calls_available) {
                 GtkWidget* call = action_button("call-start-symbolic",
                                                 display_address(key),

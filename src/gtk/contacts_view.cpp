@@ -18,7 +18,9 @@ namespace tether::ui {
             std::string search_needle;
             std::string shown;
             bool visible = false;
+            bool calls_available = false;
             void (*open_thread)(const std::string&) = nullptr;
+            void (*start_call)(const std::string&) = nullptr;
         };
 
         ContactsState g_contacts;
@@ -107,6 +109,21 @@ namespace tether::ui {
                                                        g_contacts.open_thread(stashed(GTK_WIDGET(button)));
                                                }));
             gtk_box_pack_end(GTK_BOX(box), message, FALSE, FALSE, 0);
+
+            // ponytail: availability is read when the card first opens; a link
+            // lost later surfaces as the Calls page's bt_call_result status.
+            if (is_tel && g_contacts.calls_available) {
+                GtkWidget* call = action_button("call-start-symbolic",
+                                                display_address(key),
+                                                _("Call"),
+                                                // TRANSLATORS: Spoken name of the call button beside a phone number.
+                                                tether::tr_format(_("Call {}"), display_address(key)),
+                                                G_CALLBACK(+[](GtkButton* button, gpointer) {
+                                                    if (g_contacts.start_call)
+                                                        g_contacts.start_call(stashed(GTK_WIDGET(button)));
+                                                }));
+                gtk_box_pack_end(GTK_BOX(box), call, FALSE, FALSE, 0);
+            }
             return box;
         }
 
@@ -215,13 +232,20 @@ namespace tether::ui {
     }
 
     bool contacts_view_handle_event(const nlohmann::json& event) {
-        if (event.value("command", "") == "bt_contacts")
+        const std::string command = event.value("command", "");
+        if (command == "bt_contacts")
             show_contacts(event);
+        else if (command == "bt_connection_changed") {
+            const auto& calls = event.contains("calls") ? event["calls"] : nlohmann::json();
+            g_contacts.calls_available = calls.is_object() && calls.value("available", false);
+        }
         return false;
     }
 
-    GtkWidget* contacts_view_new(void (*open_thread)(const std::string& thread_key)) {
+    GtkWidget* contacts_view_new(void (*open_thread)(const std::string& thread_key),
+                                 void (*start_call)(const std::string& number)) {
         g_contacts.open_thread = open_thread;
+        g_contacts.start_call = start_call;
         g_contacts.stack = gtk_stack_new();
 
         GtkWidget* status_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);

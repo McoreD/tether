@@ -68,21 +68,14 @@ namespace tether::ui {
             const std::string number = text ? text : "";
             if (number.empty())
                 return;
-            nlohmann::json j;
-            j["command"] = "bt_call_dial";
-            j["number"] = number;
-            daemon_send(j);
+            calls_view_dial(number);
             gtk_entry_set_text(GTK_ENTRY(g_calls.entry), "");
         }
 
         void on_redial_clicked(GtkButton* button, gpointer) {
             const char* number = static_cast<const char*>(g_object_get_data(G_OBJECT(button), "call-number"));
-            if (!number || !*number)
-                return;
-            nlohmann::json j;
-            j["command"] = "bt_call_dial";
-            j["number"] = number;
-            daemon_send(j);
+            if (number && *number)
+                calls_view_dial(number);
         }
 
         void attach_path(GtkWidget* button, const std::string& path) {
@@ -241,6 +234,13 @@ namespace tether::ui {
         }
 
     } // namespace
+
+    void calls_view_dial(const std::string& number) {
+        nlohmann::json j;
+        j["command"] = "bt_call_dial";
+        j["number"] = number;
+        daemon_send(j);
+    }
 
     void calls_view_set_visible(bool visible) {
         g_calls.visible = visible;

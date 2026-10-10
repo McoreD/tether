@@ -117,6 +117,13 @@ namespace tether::tui {
                         messages_open_thread(key);
                     };
                     rows.push_back(row);
+                    if (is_tel && available_) {
+                        const std::string number = ui::display_address(key);
+                        rows.push_back(action_row(tr_format(_("Call {}"), number), [number] {
+                            app::send({{"command", "bt_call_dial"}, {"number", number}});
+                            app::show_page("calls");
+                        }));
+                    }
                 }
                 return rows;
             }
@@ -130,9 +137,14 @@ namespace tether::tui {
             }
 
             bool handle_event(const json& event) override {
-                if (event.value("command", "") == "bt_contacts")
+                const std::string command = event.value("command", "");
+                if (command == "bt_contacts")
                     contacts_ =
                         event.contains("contacts") && event["contacts"].is_array() ? event["contacts"] : json::array();
+                else if (command == "bt_connection_changed") {
+                    const json& calls = event.contains("calls") ? event["calls"] : json();
+                    available_ = calls.is_object() && calls.value("available", false);
+                }
                 return false;
             }
 
@@ -155,6 +167,7 @@ namespace tether::tui {
 
             json contacts_ = json::array();
             std::string selected_;
+            bool available_ = false;
         };
 
     } // namespace

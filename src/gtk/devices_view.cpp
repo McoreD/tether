@@ -557,10 +557,10 @@ namespace tether::ui {
                 if (g_devices.btn_grid) {
                     gtk_widget_set_visible(g_devices.btn_grid, online);
                 }
-                if (g_devices.btn_action_bt_pair) {
-                    const std::string supervised = g_devices.bt_status.value("device_address", "");
-                    gtk_widget_set_visible(g_devices.btn_action_bt_pair, supervised.empty());
-                }
+                // Stays available once a phone is paired over Bluetooth: a second
+                // iPhone is added from here too.
+                if (g_devices.btn_action_bt_pair)
+                    gtk_widget_set_visible(g_devices.btn_action_bt_pair, TRUE);
                 update_action_bt_scan_controls();
             } else {
                 gtk_stack_set_visible_child_name(GTK_STACK(g_devices.right_pane_stack), "pair");
@@ -1379,10 +1379,18 @@ namespace tether::ui {
             }
 
             if (g_devices.select_bt_after_scan) {
-                const auto iphone =
-                    std::find_if(g_devices.bt_devices.begin(),
-                                 g_devices.bt_devices.end(),
-                                 [](const nlohmann::json& device) { return device.value("iphone", false); });
+                // Prefer an iPhone Tether is not already using, so a scan for a
+                // second phone does not land on the first one.
+                auto iphone = std::find_if(
+                    g_devices.bt_devices.begin(), g_devices.bt_devices.end(), [](const nlohmann::json& device) {
+                        const std::string address = device.value("address", "");
+                        return device.value("iphone", false) && !is_supervised_bt_device(address) &&
+                               !is_extra_bt_device(address);
+                    });
+                if (iphone == g_devices.bt_devices.end())
+                    iphone = std::find_if(g_devices.bt_devices.begin(),
+                                          g_devices.bt_devices.end(),
+                                          [](const nlohmann::json& device) { return device.value("iphone", false); });
                 if (iphone != g_devices.bt_devices.end()) {
                     g_devices.selected_bt_address = iphone->value("address", "");
                     g_devices.selected_bt_name = iphone->value("name", "iPhone");

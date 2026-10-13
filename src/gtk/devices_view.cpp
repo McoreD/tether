@@ -501,6 +501,16 @@ namespace tether::ui {
                                    available && has_primary && !supervised && !extra &&
                                        !(device && device->value("airpods", false)));
             gtk_widget_set_visible(g_devices.btn_bt_remove_extra, available && extra);
+            // With a primary iPhone set, pairing another one replaces it, so adding is the safe default.
+            auto suggest = [](GtkWidget* button, bool on) {
+                GtkStyleContext* context = gtk_widget_get_style_context(button);
+                if (on)
+                    gtk_style_context_add_class(context, "suggested-action");
+                else
+                    gtk_style_context_remove_class(context, "suggested-action");
+            };
+            suggest(g_devices.btn_bt_pair, !has_primary);
+            suggest(g_devices.btn_bt_add_extra, has_primary);
             gtk_widget_set_visible(g_devices.btn_bt_unpair, available && paired);
             // Re-soliciting only helps when the phone is withholding a profile,
             // not when the link itself is down or nothing is bonded.

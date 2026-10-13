@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether 0.2.37\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-14 06:03+0800\n"
+"POT-Creation-Date: 2026-10-14 06:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1830,16 +1830,26 @@ msgstr ""
 msgid "Link"
 msgstr ""
 
+#: src/gtk/devices_view.cpp
+msgid "Primary iPhone only."
+msgstr ""
+
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Not paired over Bluetooth yet."
 msgstr ""
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Tether is not using this device. Pair it to select it."
+msgid "Bluetooth is switched off for this iPhone."
+msgstr ""
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Tether is not using this device. Pair it to make it the primary iPhone, or "
+"add it as another one."
 msgstr ""
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Bluetooth is switched off for this iPhone."
+msgid "Tether is not using this device. Pair it to select it."
 msgstr ""
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
@@ -2180,6 +2190,19 @@ msgstr ""
 msgid ""
 "Re-advertise so the iPhone shows its Show Message Notifications and Sync "
 "Contacts toggles under Settings > Bluetooth > (i)."
+msgstr ""
+
+#: src/gtk/devices_view.cpp
+msgid "Add as Another iPhone"
+msgstr ""
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Mirror this iPhone's messages and contacts too, keeping the current one."
+msgstr ""
+
+#: src/gtk/devices_view.cpp
+msgid "Stop Mirroring"
 msgstr ""
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp

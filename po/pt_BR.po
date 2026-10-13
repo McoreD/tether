@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-14 06:03+0800\n"
+"POT-Creation-Date: 2026-10-14 06:52+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -2035,17 +2035,29 @@ msgstr "Esta máquina não consegue sustentar os recursos de Bluetooth."
 msgid "Link"
 msgstr "Enlace"
 
+#: src/gtk/devices_view.cpp
+msgid "Primary iPhone only."
+msgstr "Somente o iPhone principal."
+
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Not paired over Bluetooth yet."
 msgstr "Ainda não pareado por Bluetooth."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Tether is not using this device. Pair it to select it."
-msgstr "O Tether não está usando este dispositivo. Pareie-o para selecioná-lo."
-
-#: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Bluetooth is switched off for this iPhone."
 msgstr "O Bluetooth está desativado para este iPhone."
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Tether is not using this device. Pair it to make it the primary iPhone, or "
+"add it as another one."
+msgstr ""
+"O Tether não está usando este dispositivo. Pareie-o para torná-lo o iPhone "
+"principal ou adicione-o como outro."
+
+#: src/gtk/devices_view.cpp src/tui/devices.cpp
+msgid "Tether is not using this device. Pair it to select it."
+msgstr "O Tether não está usando este dispositivo. Pareie-o para selecioná-lo."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Connected and ready."
@@ -2428,6 +2440,20 @@ msgid ""
 msgstr ""
 "Anuncia novamente para que o iPhone mostre as opções \"Mostrar Notificações "
 "de Mensagens\" e \"Sincronizar Contatos\" em Ajustes > Bluetooth > (i)."
+
+#: src/gtk/devices_view.cpp
+msgid "Add as Another iPhone"
+msgstr "Adicionar como outro iPhone"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Mirror this iPhone's messages and contacts too, keeping the current one."
+msgstr ""
+"Espelhar também as mensagens e contatos deste iPhone, mantendo o atual."
+
+#: src/gtk/devices_view.cpp
+msgid "Stop Mirroring"
+msgstr "Parar de espelhar"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Unpair"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-14 06:03+0800\n"
+"POT-Creation-Date: 2026-10-14 06:52+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Korean\n"
@@ -1985,17 +1985,29 @@ msgstr "이 컴퓨터는 Bluetooth 기능을 지원할 수 없습니다."
 msgid "Link"
 msgstr "링크"
 
+#: src/gtk/devices_view.cpp
+msgid "Primary iPhone only."
+msgstr "기본 iPhone 전용."
+
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Not paired over Bluetooth yet."
 msgstr "아직 Bluetooth로 페어링되지 않았습니다."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Tether is not using this device. Pair it to select it."
-msgstr "Tether가 이 기기를 사용하고 있지 않습니다. 선택하려면 페어링하십시오."
-
-#: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Bluetooth is switched off for this iPhone."
 msgstr "이 iPhone에 대해 Bluetooth가 꺼져 있습니다."
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Tether is not using this device. Pair it to make it the primary iPhone, or "
+"add it as another one."
+msgstr ""
+"Tether가 이 기기를 사용하고 있지 않습니다. 페어링하여 기본 iPhone으로 만들거"
+"나 다른 iPhone으로 추가하십시오."
+
+#: src/gtk/devices_view.cpp src/tui/devices.cpp
+msgid "Tether is not using this device. Pair it to select it."
+msgstr "Tether가 이 기기를 사용하고 있지 않습니다. 선택하려면 페어링하십시오."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Connected and ready."
@@ -2373,6 +2385,19 @@ msgid ""
 msgstr ""
 "다시 광고하여 iPhone의 설정 > Bluetooth > (i)에 '메시지 알림 보기'와 '연락처 "
 "동기화'가 표시되도록 합니다."
+
+#: src/gtk/devices_view.cpp
+msgid "Add as Another iPhone"
+msgstr "다른 iPhone으로 추가"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Mirror this iPhone's messages and contacts too, keeping the current one."
+msgstr "현재 iPhone을 유지하면서 이 iPhone의 메시지와 연락처도 미러링합니다."
+
+#: src/gtk/devices_view.cpp
+msgid "Stop Mirroring"
+msgstr "미러링 중지"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Unpair"

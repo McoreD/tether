@@ -92,6 +92,8 @@ namespace tether::ui {
             GtkWidget* btn_bt_solicit = nullptr;
             GtkWidget* chk_bt_enabled = nullptr;
             GtkWidget* btn_bt_unpair = nullptr;
+            GtkWidget* btn_bt_add_extra = nullptr;
+            GtkWidget* btn_bt_remove_extra = nullptr;
             std::string bt_operation_id;
 
             GtkWidget* lbl_welcome_wifi = nullptr;
@@ -159,6 +161,38 @@ namespace tether::ui {
                 return false;
             const std::string supervised = g_devices.bt_status.value("device_address", "");
             return !supervised.empty() && supervised == address;
+        }
+
+        // An iPhone mirrored alongside the primary one, for its messages and contacts.
+        bool is_extra_bt_device(const std::string& address) {
+            const auto extras = g_devices.bt_status.value("extra_devices", nlohmann::json::array());
+            for (const auto& extra : extras)
+                if (extra.is_string() && extra.get<std::string>() == address)
+                    return true;
+            return false;
+        }
+
+        // The live link and profile status of an extra iPhone, or null.
+        nlohmann::json extra_bt_connection(const std::string& address) {
+            const auto extras = g_devices.bt_connection.value("extra_devices", nlohmann::json::array());
+            for (const auto& extra : extras)
+                if (extra.is_object() && extra.value("address", "") == address)
+                    return extra;
+            return nullptr;
+        }
+
+        // Whether the daemon has live profile state for this device.
+        bool is_mirrored_bt_device(const std::string& address) {
+            return is_supervised_bt_device(address) || !extra_bt_connection(address).is_null();
+        }
+
+        const nlohmann::json& bt_connection_for(const std::string& address, nlohmann::json& storage) {
+            if (is_supervised_bt_device(address))
+                return g_devices.bt_connection;
+            storage = extra_bt_connection(address);
+            if (storage.is_null())
+                storage = nlohmann::json::object();
+            return storage;
         }
 
         void set_capability_row(GtkWidget* label, const std::string& title, bool ok, const std::string& note) {
@@ -404,16 +438,20 @@ namespace tether::ui {
 
             // Only the supervised bond has live profile state; anything else can
             // report what BlueZ knows and no more.
-            const nlohmann::json& connection = g_devices.bt_connection;
-            const bool classic = supervised ? connection.value("classic_connected", false)
-                                            : (device && device->value("classic_connected", false));
+            const bool extra = is_extra_bt_device(address);
+            const bool mirrored = is_mirrored_bt_device(address);
+            const bool has_primary = !g_devices.bt_status.value("device_address", "").empty();
+            nlohmann::json extra_connection;
+            const nlohmann::json& connection = bt_connection_for(address, extra_connection);
+            const bool classic = mirrored ? connection.value("classic_connected", false)
+                                          : (device && device->value("classic_connected", false));
             const bool le =
-                supervised ? connection.value("le_connected", false) : (device && device->value("le_connected", false));
-            const bool map_open = supervised && connection.value("map_open", false);
-            const bool pbap_open = supervised && connection.value("pbap_open", false);
+                mirrored ? connection.value("le_connected", false) : (device && device->value("le_connected", false));
+            const bool map_open = mirrored && connection.value("map_open", false);
+            const bool pbap_open = mirrored && connection.value("pbap_open", false);
             const bool ancs_ready = supervised && connection.value("ancs_ready", false);
 
-            const bool all_live = map_open && pbap_open && (ancs_ready || !ancs_on);
+            const bool all_live = map_open && pbap_open && (ancs_ready || !ancs_on || extra);
             gtk_widget_set_visible(g_devices.bt_setup_box, !commands.empty() && !all_live);
 
             set_capability_row(g_devices.lbl_bt_link,
@@ -432,13 +470,20 @@ namespace tether::ui {
             set_capability_row(g_devices.lbl_bt_notifications,
                                _("Notifications"),
                                ancs_ready,
-                               ancs_ready ? "" : connection.value("ancs_reason", ""));
+                               ancs_ready ? ""
+                               : extra    ? _("Primary iPhone only.")
+                                          : connection.value("ancs_reason", ""));
 
             // The daemon's reasons name the actual next step, so they are shown
             // verbatim rather than replaced with something vaguer.
             std::string reason;
             if (!paired) {
                 reason = _("Not paired over Bluetooth yet.");
+            } else if (extra) {
+                reason = bt_on ? connection_reason(connection) : _("Bluetooth is switched off for this iPhone.");
+            } else if (!supervised && has_primary) {
+                reason = _("Tether is not using this device. Pair it to make it the primary iPhone, or add it as "
+                           "another one.");
             } else if (!supervised) {
                 reason = _("Tether is not using this device. Pair it to select it.");
             } else if (!bt_on) {
@@ -450,7 +495,12 @@ namespace tether::ui {
             }
             set_text(g_devices.lbl_bt_reason, reason);
 
-            gtk_widget_set_visible(g_devices.btn_bt_pair, available && (!paired || !supervised));
+            gtk_widget_set_visible(g_devices.btn_bt_pair, available && (!paired || !supervised) && !extra);
+            // A second iPhone joins the primary one rather than replacing it.
+            gtk_widget_set_visible(g_devices.btn_bt_add_extra,
+                                   available && has_primary && !supervised && !extra &&
+                                       !(device && device->value("airpods", false)));
+            gtk_widget_set_visible(g_devices.btn_bt_remove_extra, available && extra);
             gtk_widget_set_visible(g_devices.btn_bt_unpair, available && paired);
             // Re-soliciting only helps when the phone is withholding a profile,
             // not when the link itself is down or nothing is bonded.
@@ -592,6 +642,36 @@ namespace tether::ui {
             }
             gtk_widget_set_sensitive(g_devices.btn_bt_pair, FALSE);
             set_bt_progress(_("Pairing\u2026 confirm the prompt on the iPhone."));
+        }
+
+        void on_bt_add_extra_click(GtkWidget*, gpointer) {
+            const std::string address = g_devices.selected_bt_address;
+            if (address.empty())
+                return;
+            const nlohmann::json* device = find_bt_device(address);
+            if (device && device->value("paired", false)) {
+                if (!daemon_send({{"command", "bt_add_device"}, {"address", address}}))
+                    set_bt_progress(_("Could not reach the Tether daemon."));
+                return;
+            }
+            g_devices.bt_operation_id = new_bt_operation_id();
+            if (!daemon_send({{"command", "bt_pair"},
+                              {"address", address},
+                              {"extra", true},
+                              {"operation_id", g_devices.bt_operation_id}})) {
+                g_devices.bt_operation_id.clear();
+                set_bt_progress(_("Could not reach the Tether daemon."));
+                return;
+            }
+            gtk_widget_set_sensitive(g_devices.btn_bt_add_extra, FALSE);
+            set_bt_progress(_("Pairing\u2026 confirm the prompt on the iPhone."));
+        }
+
+        void on_bt_remove_extra_click(GtkWidget*, gpointer) {
+            if (g_devices.selected_bt_address.empty())
+                return;
+            if (!daemon_send({{"command", "bt_remove_device"}, {"address", g_devices.selected_bt_address}}))
+                set_bt_progress(_("Could not reach the Tether daemon."));
         }
 
         void on_bt_unpair_click(GtkWidget*, gpointer) {
@@ -938,9 +1018,10 @@ namespace tether::ui {
             const bool paired = device.value("paired", false);
             const bool connected = device.value("connected", false);
             const bool airpods = device.value("airpods", false);
-            const bool route_ready =
-                is_supervised_bt_device(address) && (g_devices.bt_connection.value("map_open", false) ||
-                                                     g_devices.bt_connection.value("ancs_ready", false));
+            nlohmann::json extra_connection;
+            const nlohmann::json& connection = bt_connection_for(address, extra_connection);
+            const bool route_ready = is_mirrored_bt_device(address) &&
+                                     (connection.value("map_open", false) || connection.value("ancs_ready", false));
 
             GtkWidget* row = gtk_list_box_row_new();
             g_object_set_data_full(G_OBJECT(row), "bt_address", g_strdup(address.c_str()), g_free);
@@ -1406,6 +1487,7 @@ namespace tether::ui {
         }
         if (command == "bt_pair_result" || command == "bt_unpair_result") {
             gtk_widget_set_sensitive(g_devices.btn_bt_pair, TRUE);
+            gtk_widget_set_sensitive(g_devices.btn_bt_add_extra, TRUE);
             g_devices.bt_operation_id.clear();
             set_bt_progress(event.value("message", ""));
             // The bond and the supervised device both just changed.
@@ -1760,6 +1842,16 @@ namespace tether::ui {
                                       "Sync Contacts toggles under Settings > Bluetooth > (i)."));
         g_signal_connect(g_devices.btn_bt_solicit, "clicked", G_CALLBACK(on_bt_solicit_click), nullptr);
         gtk_box_pack_start(GTK_BOX(bt_buttons), g_devices.btn_bt_solicit, FALSE, FALSE, 0);
+
+        g_devices.btn_bt_add_extra = gtk_button_new_with_label(_("Add as Another iPhone"));
+        gtk_widget_set_tooltip_text(g_devices.btn_bt_add_extra,
+                                    _("Mirror this iPhone's messages and contacts too, keeping the current one."));
+        g_signal_connect(g_devices.btn_bt_add_extra, "clicked", G_CALLBACK(on_bt_add_extra_click), nullptr);
+        gtk_box_pack_start(GTK_BOX(bt_buttons), g_devices.btn_bt_add_extra, FALSE, FALSE, 0);
+
+        g_devices.btn_bt_remove_extra = gtk_button_new_with_label(_("Stop Mirroring"));
+        g_signal_connect(g_devices.btn_bt_remove_extra, "clicked", G_CALLBACK(on_bt_remove_extra_click), nullptr);
+        gtk_box_pack_start(GTK_BOX(bt_buttons), g_devices.btn_bt_remove_extra, FALSE, FALSE, 0);
 
         g_devices.btn_bt_unpair = gtk_button_new_with_label(_("Unpair"));
         g_signal_connect(g_devices.btn_bt_unpair, "clicked", G_CALLBACK(on_bt_unpair_click), nullptr);

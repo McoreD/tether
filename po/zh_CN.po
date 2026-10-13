@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-14 06:03+0800\n"
+"POT-Creation-Date: 2026-10-14 06:52+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Simplified Chinese\n"
@@ -1942,17 +1942,28 @@ msgstr "这台机器无法支持蓝牙功能。"
 msgid "Link"
 msgstr "链路"
 
+#: src/gtk/devices_view.cpp
+msgid "Primary iPhone only."
+msgstr "仅限主 iPhone。"
+
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Not paired over Bluetooth yet."
 msgstr "尚未通过蓝牙配对。"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Tether is not using this device. Pair it to select it."
-msgstr "Tether 未使用此设备。配对后即可选择它。"
-
-#: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Bluetooth is switched off for this iPhone."
 msgstr "此 iPhone 的蓝牙已关闭。"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Tether is not using this device. Pair it to make it the primary iPhone, or "
+"add it as another one."
+msgstr ""
+"Tether 未使用此设备。配对以将其设为主 iPhone，或将其添加为另一台 iPhone。"
+
+#: src/gtk/devices_view.cpp src/tui/devices.cpp
+msgid "Tether is not using this device. Pair it to select it."
+msgstr "Tether 未使用此设备。配对后即可选择它。"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Connected and ready."
@@ -2323,6 +2334,19 @@ msgid ""
 msgstr ""
 "重新广播，让 iPhone 在 设置 > 蓝牙 > (i) 中显示“显示信息通知”和“同步通讯录”开"
 "关。"
+
+#: src/gtk/devices_view.cpp
+msgid "Add as Another iPhone"
+msgstr "添加为另一台 iPhone"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Mirror this iPhone's messages and contacts too, keeping the current one."
+msgstr "保留当前 iPhone，同时镜像此 iPhone 的信息和联系人。"
+
+#: src/gtk/devices_view.cpp
+msgid "Stop Mirroring"
+msgstr "停止镜像"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Unpair"

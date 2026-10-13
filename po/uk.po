@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-14 06:03+0800\n"
+"POT-Creation-Date: 2026-10-14 06:52+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Ukrainian\n"
@@ -2027,18 +2027,30 @@ msgstr "Ця машина не потягне функції Bluetooth."
 msgid "Link"
 msgstr "З'єднання"
 
+#: src/gtk/devices_view.cpp
+msgid "Primary iPhone only."
+msgstr "Лише основний iPhone."
+
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Not paired over Bluetooth yet."
 msgstr "Пару через Bluetooth ще не створено."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
+msgid "Bluetooth is switched off for this iPhone."
+msgstr "Bluetooth вимкнено для цього iPhone."
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Tether is not using this device. Pair it to make it the primary iPhone, or "
+"add it as another one."
+msgstr ""
+"Tether не використовує цей пристрій. Створіть пару, щоб зробити його "
+"основним iPhone, або додайте його як ще один."
+
+#: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Tether is not using this device. Pair it to select it."
 msgstr ""
 "Tether не використовує цей пристрій. Створіть із ним пару, щоб вибрати його."
-
-#: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Bluetooth is switched off for this iPhone."
-msgstr "Bluetooth вимкнено для цього iPhone."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Connected and ready."
@@ -2424,6 +2436,21 @@ msgid ""
 msgstr ""
 "Знову оголошує про себе, щоб iPhone показав параметри «Показ сповіщень про "
 "повідомлення» та «Синхронізація контактів» у Параметри > Bluetooth > (i)."
+
+#: src/gtk/devices_view.cpp
+msgid "Add as Another iPhone"
+msgstr "Додати як ще один iPhone"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Mirror this iPhone's messages and contacts too, keeping the current one."
+msgstr ""
+"Також віддзеркалювати повідомлення й контакти цього iPhone, зберігши "
+"поточний."
+
+#: src/gtk/devices_view.cpp
+msgid "Stop Mirroring"
+msgstr "Зупинити віддзеркалення"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Unpair"

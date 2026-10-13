@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-14 06:03+0800\n"
+"POT-Creation-Date: 2026-10-14 06:52+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Turkish\n"
@@ -2012,17 +2012,29 @@ msgstr "Bu makine Bluetooth özelliklerini taşıyamaz."
 msgid "Link"
 msgstr "Bağlantı"
 
+#: src/gtk/devices_view.cpp
+msgid "Primary iPhone only."
+msgstr "Yalnızca birincil iPhone."
+
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Not paired over Bluetooth yet."
 msgstr "Henüz Bluetooth üzerinden eşleşmedi."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Tether is not using this device. Pair it to select it."
-msgstr "Tether bu aygıtı kullanmıyor. Seçmek için onunla eşleşin."
-
-#: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Bluetooth is switched off for this iPhone."
 msgstr "Bu iPhone için Bluetooth kapalı."
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Tether is not using this device. Pair it to make it the primary iPhone, or "
+"add it as another one."
+msgstr ""
+"Tether bu aygıtı kullanmıyor. Birincil iPhone yapmak için eşleyin veya başka "
+"bir iPhone olarak ekleyin."
+
+#: src/gtk/devices_view.cpp src/tui/devices.cpp
+msgid "Tether is not using this device. Pair it to select it."
+msgstr "Tether bu aygıtı kullanmıyor. Seçmek için onunla eşleşin."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Connected and ready."
@@ -2404,6 +2416,20 @@ msgstr ""
 "Yeniden duyuru yapar; böylece iPhone, Ayarlar > Bluetooth > (i) altında "
 "\"Mesaj Bildirimlerini Göster\" ve \"Kişileri Eşzamanla\" seçeneklerini "
 "gösterir."
+
+#: src/gtk/devices_view.cpp
+msgid "Add as Another iPhone"
+msgstr "Başka bir iPhone olarak ekle"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Mirror this iPhone's messages and contacts too, keeping the current one."
+msgstr ""
+"Mevcut olanı koruyarak bu iPhone'un mesajlarını ve kişilerini de yansıt."
+
+#: src/gtk/devices_view.cpp
+msgid "Stop Mirroring"
+msgstr "Yansıtmayı durdur"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Unpair"

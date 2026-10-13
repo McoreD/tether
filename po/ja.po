@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-14 06:03+0800\n"
+"POT-Creation-Date: 2026-10-14 06:52+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Japanese\n"
@@ -2008,18 +2008,30 @@ msgstr "このマシンでは Bluetooth 機能を利用できません。"
 msgid "Link"
 msgstr "リンク"
 
+#: src/gtk/devices_view.cpp
+msgid "Primary iPhone only."
+msgstr "メインの iPhone のみ。"
+
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Not paired over Bluetooth yet."
 msgstr "まだ Bluetooth でペアリングしていません。"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
+msgid "Bluetooth is switched off for this iPhone."
+msgstr "この iPhone では Bluetooth がオフになっています。"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Tether is not using this device. Pair it to make it the primary iPhone, or "
+"add it as another one."
+msgstr ""
+"Tether はこのデバイスを使用していません。ペアリングしてメインの iPhone にする"
+"か、別の iPhone として追加してください。"
+
+#: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Tether is not using this device. Pair it to select it."
 msgstr ""
 "Tether はこのデバイスを使用していません。選択するにはペアリングしてください。"
-
-#: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Bluetooth is switched off for this iPhone."
-msgstr "この iPhone では Bluetooth がオフになっています。"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Connected and ready."
@@ -2401,6 +2413,21 @@ msgid ""
 msgstr ""
 "アドバタイズし直し、iPhone の 設定 > Bluetooth > (i) に「メッセージ通知を表"
 "示」と「連絡先を同期」が表示されるようにします。"
+
+#: src/gtk/devices_view.cpp
+msgid "Add as Another iPhone"
+msgstr "別の iPhone として追加"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Mirror this iPhone's messages and contacts too, keeping the current one."
+msgstr ""
+"現在の iPhone はそのままで、この iPhone のメッセージと連絡先もミラーリングし"
+"ます。"
+
+#: src/gtk/devices_view.cpp
+msgid "Stop Mirroring"
+msgstr "ミラーリングを停止"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Unpair"

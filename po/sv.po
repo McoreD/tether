@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-14 06:03+0800\n"
+"POT-Creation-Date: 2026-10-14 06:52+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Swedish\n"
@@ -2015,17 +2015,29 @@ msgstr "Den här maskinen klarar inte Bluetooth-funktionerna."
 msgid "Link"
 msgstr "Länk"
 
+#: src/gtk/devices_view.cpp
+msgid "Primary iPhone only."
+msgstr "Endast primär iPhone."
+
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Not paired over Bluetooth yet."
 msgstr "Inte parkopplad via Bluetooth ännu."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Tether is not using this device. Pair it to select it."
-msgstr "Tether använder inte den här enheten. Parkoppla den för att välja den."
-
-#: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Bluetooth is switched off for this iPhone."
 msgstr "Bluetooth är avstängt för den här iPhonen."
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Tether is not using this device. Pair it to make it the primary iPhone, or "
+"add it as another one."
+msgstr ""
+"Tether använder inte den här enheten. Parkoppla den för att göra den till "
+"primär iPhone, eller lägg till den som en till."
+
+#: src/gtk/devices_view.cpp src/tui/devices.cpp
+msgid "Tether is not using this device. Pair it to select it."
+msgstr "Tether använder inte den här enheten. Parkoppla den för att välja den."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Connected and ready."
@@ -2408,6 +2420,21 @@ msgstr ""
 "Annonserar igen så att iPhonen visar sina inställningar \"Visa "
 "meddelandeaviseringar\" och \"Synkronisera kontakter\" under Inställningar > "
 "Bluetooth > (i)."
+
+#: src/gtk/devices_view.cpp
+msgid "Add as Another iPhone"
+msgstr "Lägg till som en till iPhone"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Mirror this iPhone's messages and contacts too, keeping the current one."
+msgstr ""
+"Spegla även den här iPhonens meddelanden och kontakter och behåll den "
+"nuvarande."
+
+#: src/gtk/devices_view.cpp
+msgid "Stop Mirroring"
+msgstr "Sluta spegla"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Unpair"

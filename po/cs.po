@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-14 06:03+0800\n"
+"POT-Creation-Date: 2026-10-14 06:52+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Czech\n"
@@ -2014,17 +2014,29 @@ msgstr "Tento stroj nezvládne funkce Bluetooth."
 msgid "Link"
 msgstr "Spojení"
 
+#: src/gtk/devices_view.cpp
+msgid "Primary iPhone only."
+msgstr "Jen hlavní iPhone."
+
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Not paired over Bluetooth yet."
 msgstr "Zatím nespárováno přes Bluetooth."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
-msgid "Tether is not using this device. Pair it to select it."
-msgstr "Tether toto zařízení nepoužívá. Spárujte jej, abyste jej vybrali."
-
-#: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Bluetooth is switched off for this iPhone."
 msgstr "Bluetooth je pro tento iPhone vypnuté."
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Tether is not using this device. Pair it to make it the primary iPhone, or "
+"add it as another one."
+msgstr ""
+"Tether toto zařízení nepoužívá. Spárujte ho, aby se stalo hlavním iPhonem, "
+"nebo ho přidejte jako další."
+
+#: src/gtk/devices_view.cpp src/tui/devices.cpp
+msgid "Tether is not using this device. Pair it to select it."
+msgstr "Tether toto zařízení nepoužívá. Spárujte jej, abyste jej vybrali."
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Connected and ready."
@@ -2407,6 +2419,19 @@ msgid ""
 msgstr ""
 "Znovu se ohlásí, aby iPhone zobrazil volby „Zobrazovat oznámení zpráv“ a "
 "„Synchronizovat kontakty“ v Nastavení > Bluetooth > (i)."
+
+#: src/gtk/devices_view.cpp
+msgid "Add as Another iPhone"
+msgstr "Přidat jako další iPhone"
+
+#: src/gtk/devices_view.cpp
+msgid ""
+"Mirror this iPhone's messages and contacts too, keeping the current one."
+msgstr "Zrcadlit také zprávy a kontakty tohoto iPhonu a ponechat ten současný."
+
+#: src/gtk/devices_view.cpp
+msgid "Stop Mirroring"
+msgstr "Ukončit zrcadlení"
 
 #: src/gtk/devices_view.cpp src/tui/devices.cpp
 msgid "Unpair"

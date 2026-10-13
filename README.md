@@ -44,6 +44,17 @@ Drag and drop files from Linux directly into the iPhone app, or receive files au
 ### Messages and Notifications
 Read and reply to SMS and iMessage conversations, and see notifications from any app on the phone, on the Linux desktop.
 
+#### More than one iPhone
+Messages and contacts can come from several iPhones at once. Pair the first one as usual, then add the others:
+
+```bash
+tether --bt-pair AA:BB:CC:DD:EE:FF --extra   # pair a second iPhone without replacing the first
+tether --bt-add AA:BB:CC:DD:EE:FF            # or mirror one that is already bonded
+tether --bt-remove AA:BB:CC:DD:EE:FF         # stop mirroring it
+```
+
+Conversations from an extra iPhone are listed alongside the first one's, labelled with that phone's name, and replies go out from the phone the conversation is on. Notifications, calls and the away lock follow the first (primary) iPhone. Pairing a phone without `--extra` makes it the primary one.
+
 ### Device Pairing
 There are two ways tether communicates with the iPhone:
 - WiFi: for clipboard sync, file transfer, and OTP handling

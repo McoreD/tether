@@ -9,6 +9,7 @@ add_executable(tether_test
     test_bluetooth_supervisor.cpp
     test_bmessage.cpp
     test_bmessage_build.cpp
+    test_multi_device.cpp
     test_ancs_parser.cpp
     test_ancs_sequencer.cpp
     test_ancs_notifications.cpp

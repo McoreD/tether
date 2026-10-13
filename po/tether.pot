@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: tether 0.2.36\n"
+"Project-Id-Version: tether 0.2.37\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-10 13:51-0700\n"
+"POT-Creation-Date: 2026-10-14 06:03+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,6 +130,20 @@ msgstr ""
 
 #: src/cli/main.cpp
 msgid "Pair with an iPhone over Bluetooth."
+msgstr ""
+
+#: src/cli/main.cpp
+msgid ""
+"With --bt-pair, add the iPhone alongside the one already paired instead of "
+"replacing it. Its messages and contacts are mirrored too."
+msgstr ""
+
+#: src/cli/main.cpp
+msgid "Mirror messages and contacts from another bonded iPhone as well."
+msgstr ""
+
+#: src/cli/main.cpp
+msgid "Stop mirroring an iPhone added with --bt-add or --extra."
 msgstr ""
 
 #: src/cli/main.cpp
@@ -405,6 +419,10 @@ msgstr ""
 
 #: src/cli/main.cpp
 msgid "off (--bt-enable on)"
+msgstr ""
+
+#: src/cli/main.cpp
+msgid "Also mirroring"
 msgstr ""
 
 #: src/cli/main.cpp
@@ -938,6 +956,20 @@ msgid "A Bluetooth address is required, e.g. --bt-pair AA:BB:CC:DD:EE:FF\n"
 msgstr ""
 
 #: src/cli/main.cpp
+msgid "A Bluetooth address is required, e.g. --bt-add AA:BB:CC:DD:EE:FF\n"
+msgstr ""
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Mirroring {} as well."
+msgstr ""
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Stopped mirroring {}."
+msgstr ""
+
+#: src/cli/main.cpp
 msgid "Expected on or off, e.g. --bt-enable off\n"
 msgstr ""
 
@@ -1091,6 +1123,10 @@ msgstr ""
 
 #: src/core/src/bluetooth/connection.cpp
 msgid "Nothing to send."
+msgstr ""
+
+#: src/core/src/bluetooth/connection.cpp
+msgid "Group replies are only available on the primary iPhone."
 msgstr ""
 
 #: src/core/src/bluetooth/connection.cpp src/gtk/messages_view.cpp

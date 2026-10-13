@@ -44,7 +44,8 @@ namespace tether::bluetooth {
         }
     }
 
-    std::string ContactStore::name_for(const std::string& thread_key) const {
+    std::string ContactStore::name_for(const std::string& scoped_key) const {
+        const std::string thread_key = unscoped(scoped_key);
         if (auto it = by_key_.find(thread_key); it != by_key_.end())
             return it->second;
 

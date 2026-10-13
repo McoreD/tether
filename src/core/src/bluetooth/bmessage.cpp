@@ -282,7 +282,38 @@ namespace tether::bluetooth {
         return digits.size() < TEL_SUFFIX_DIGITS ? std::string{} : digits.substr(digits.size() - TEL_SUFFIX_DIGITS);
     }
 
-    std::string thread_bucket(const std::string& thread_key) {
+    namespace {
+        constexpr const char* DEVICE_SCOPE_PREFIX = "dev:";
+        constexpr size_t DEVICE_SCOPE_PREFIX_LEN = 4;
+    } // namespace
+
+    std::string scope_to_device(const std::string& device, const std::string& key) {
+        if (device.empty() || key.empty())
+            return key;
+        return DEVICE_SCOPE_PREFIX + device + "/" + key;
+    }
+
+    std::string device_of(const std::string& key) {
+        if (key.rfind(DEVICE_SCOPE_PREFIX, 0) != 0)
+            return {};
+        const size_t slash = key.find('/', DEVICE_SCOPE_PREFIX_LEN);
+        return slash == std::string::npos ? std::string{}
+                                          : key.substr(DEVICE_SCOPE_PREFIX_LEN, slash - DEVICE_SCOPE_PREFIX_LEN);
+    }
+
+    std::string unscoped(const std::string& key) {
+        if (key.rfind(DEVICE_SCOPE_PREFIX, 0) != 0)
+            return key;
+        const size_t slash = key.find('/', DEVICE_SCOPE_PREFIX_LEN);
+        return slash == std::string::npos ? key : key.substr(slash + 1);
+    }
+
+    std::string thread_bucket(const std::string& scoped_key) {
+        // Two phones talking to one person are two conversations: a reply has to
+        // leave from the phone the person wrote to.
+        if (const std::string device = device_of(scoped_key); !device.empty())
+            return scope_to_device(device, thread_bucket(unscoped(scoped_key)));
+        const std::string& thread_key = scoped_key;
         if (thread_key.rfind("tel:", 0) != 0)
             return thread_key;
         const std::string number = thread_key.substr(4);
@@ -386,7 +417,8 @@ namespace tether::bluetooth {
         return true;
     }
 
-    bool recipient_from_thread_key(const std::string& thread_key, Recipient& out, std::string& err_out) {
+    bool recipient_from_thread_key(const std::string& scoped_key, Recipient& out, std::string& err_out) {
+        const std::string thread_key = unscoped(scoped_key);
         if (thread_key.rfind("tel:", 0) == 0) {
             out.kind = RecipientKind::Tel;
             out.address = thread_key.substr(4);

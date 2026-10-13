@@ -55,6 +55,17 @@ namespace tether::bluetooth {
     // The stable key for one conversation.
     std::string thread_key_for(const VCardParty& party);
 
+    // Thread keys and message handles from an iPhone other than the primary one
+    // carry that phone's address, e.g. "dev:AA:BB:CC:DD:EE:FF/tel:+15551234567".
+    // The primary phone's stay bare, so a journal written before a second phone
+    // was added still loads unchanged, and a reply always leaves from the phone
+    // the conversation arrived on.
+    std::string scope_to_device(const std::string& device, const std::string& key);
+    // The address a scoped key names, or empty for the primary phone.
+    std::string device_of(const std::string& key);
+    // The key without its device scope.
+    std::string unscoped(const std::string& key);
+
     // The nationally significant digits of a number, used to recognize two
     // spellings of one number. Empty when there are fewer than 10 digits.
     std::string tel_suffix(const std::string& raw);

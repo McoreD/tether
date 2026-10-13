@@ -212,7 +212,11 @@ namespace tether::ui {
             GtkWidget* labels = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 
             GtkWidget* title = gtk_label_new(nullptr);
-            gtk_label_set_markup(GTK_LABEL(title), ("<b>" + escape_markup(name) + "</b>").c_str());
+            std::string title_markup = "<b>" + escape_markup(name) + "</b>";
+            // Only conversations on an extra iPhone carry a phone name.
+            if (const std::string phone = thread.value("device_name", ""); !phone.empty())
+                title_markup += "  <small>" + escape_markup(phone) + "</small>";
+            gtk_label_set_markup(GTK_LABEL(title), title_markup.c_str());
             gtk_label_set_xalign(GTK_LABEL(title), 0.0);
             gtk_label_set_ellipsize(GTK_LABEL(title), PANGO_ELLIPSIZE_END);
             gtk_box_pack_start(GTK_BOX(labels), title, FALSE, FALSE, 0);

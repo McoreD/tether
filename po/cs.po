@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-10 13:51-0700\n"
+"POT-Creation-Date: 2026-10-14 06:03+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Czech\n"
@@ -134,6 +134,22 @@ msgstr "Vypsat kontakty z iPhonu nebo je vyhledat podle jména či čísla."
 #: src/cli/main.cpp
 msgid "Pair with an iPhone over Bluetooth."
 msgstr "Spárovat iPhone přes Bluetooth."
+
+#: src/cli/main.cpp
+msgid ""
+"With --bt-pair, add the iPhone alongside the one already paired instead of "
+"replacing it. Its messages and contacts are mirrored too."
+msgstr ""
+"S --bt-pair přidá iPhone vedle již spárovaného místo jeho nahrazení. Jeho "
+"zprávy a kontakty se také zrcadlí."
+
+#: src/cli/main.cpp
+msgid "Mirror messages and contacts from another bonded iPhone as well."
+msgstr "Zrcadlit také zprávy a kontakty z dalšího spárovaného iPhonu."
+
+#: src/cli/main.cpp
+msgid "Stop mirroring an iPhone added with --bt-add or --extra."
+msgstr "Ukončit zrcadlení iPhonu přidaného pomocí --bt-add nebo --extra."
 
 #: src/cli/main.cpp
 msgid ""
@@ -447,6 +463,10 @@ msgstr "připojuje se"
 #: src/cli/main.cpp
 msgid "off (--bt-enable on)"
 msgstr "vypnuto (--bt-enable on)"
+
+#: src/cli/main.cpp
+msgid "Also mirroring"
+msgstr "Zrcadlí také"
 
 #: src/cli/main.cpp
 msgid "History"
@@ -1027,6 +1047,20 @@ msgid "A Bluetooth address is required, e.g. --bt-pair AA:BB:CC:DD:EE:FF\n"
 msgstr "Je vyžadována Bluetooth adresa, např. --bt-pair AA:BB:CC:DD:EE:FF\n"
 
 #: src/cli/main.cpp
+msgid "A Bluetooth address is required, e.g. --bt-add AA:BB:CC:DD:EE:FF\n"
+msgstr "Je vyžadována Bluetooth adresa, např. --bt-add AA:BB:CC:DD:EE:FF\n"
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Mirroring {} as well."
+msgstr "Zrcadlí se také {}."
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Stopped mirroring {}."
+msgstr "Zrcadlení {} ukončeno."
+
+#: src/cli/main.cpp
 msgid "Expected on or off, e.g. --bt-enable off\n"
 msgstr "Očekáváno on nebo off, např. --bt-enable off\n"
 
@@ -1208,6 +1242,10 @@ msgstr "Připojeno přes BR/EDR a LE."
 #: src/core/src/bluetooth/connection.cpp
 msgid "Nothing to send."
 msgstr "Není co odeslat."
+
+#: src/core/src/bluetooth/connection.cpp
+msgid "Group replies are only available on the primary iPhone."
+msgstr "Skupinové odpovědi jsou dostupné jen na hlavním iPhonu."
 
 #: src/core/src/bluetooth/connection.cpp src/gtk/messages_view.cpp
 #: src/tui/messages.cpp

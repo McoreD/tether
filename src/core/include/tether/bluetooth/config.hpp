@@ -4,6 +4,7 @@
 #include "tether/secret_store.hpp"
 
 #include <string>
+#include <vector>
 
 namespace tether::bluetooth {
 
@@ -28,6 +29,10 @@ namespace tether::bluetooth {
     struct Config {
         // Address of the selected iPhone, e.g. "02:00:00:00:00:04".
         std::string device_address;
+        // Further iPhones whose messages and contacts are mirrored alongside the
+        // selected one. Notifications, calls and the away lock stay with
+        // device_address, the primary phone.
+        std::vector<std::string> extra_devices;
         AuthStrategy auth_strategy = AuthStrategy::ConnectFirst;
         // Whether to mirror notifications. Dual bond turns it on; nothing else writes it but the user
         bool ancs_enabled = true;
@@ -77,6 +82,16 @@ namespace tether::bluetooth {
 
     // The address supervision should run against: none while Bluetooth is off.
     std::string supervised_address(const Config& config);
+
+    // The extra iPhones supervision should run against: none while Bluetooth is
+    // off, and never the primary phone a second time.
+    std::vector<std::string> supervised_extra_addresses(const Config& config);
+
+    // Adds an extra iPhone. Returns false when it is already the primary phone
+    // or already listed.
+    bool add_extra_device(Config& config, const std::string& address);
+    // Returns false when the address was not listed.
+    bool remove_extra_device(Config& config, const std::string& address);
 
     // exposed for tests without touching fs
     std::string serialize_config(const Config& config);

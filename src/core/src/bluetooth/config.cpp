@@ -3,6 +3,7 @@
 #include "tether/paths.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -55,6 +56,7 @@ namespace tether::bluetooth {
         nlohmann::json j;
         j["config_version"] = CONFIG_VERSION;
         j["device_address"] = config.device_address;
+        j["extra_devices"] = config.extra_devices;
         j["auth_strategy"] = to_string(config.auth_strategy);
         j["ancs_enabled"] = config.ancs_enabled;
         j["ancs_content_enabled"] = config.ancs_content_enabled;
@@ -81,6 +83,11 @@ namespace tether::bluetooth {
             if (!j.is_object())
                 return config;
             config.device_address = j.value("device_address", "");
+            if (auto extra = j.find("extra_devices"); extra != j.end() && extra->is_array()) {
+                for (const auto& address : *extra)
+                    if (address.is_string() && !address.get<std::string>().empty())
+                        add_extra_device(config, address.get<std::string>());
+            }
             config.auth_strategy = auth_strategy_from_string(j.value("auth_strategy", ""));
             config.ancs_enabled = j.value("ancs_enabled", true);
             const int version = j.value("config_version", 0);
@@ -107,6 +114,52 @@ namespace tether::bluetooth {
 
     std::string supervised_address(const Config& config) {
         return config.enabled ? config.device_address : std::string{};
+    }
+
+    namespace {
+        bool same_address(const std::string& a, const std::string& b) {
+            return a.size() == b.size() && std::equal(a.begin(), a.end(), b.begin(), [](char x, char y) {
+                       return std::toupper(static_cast<unsigned char>(x)) ==
+                              std::toupper(static_cast<unsigned char>(y));
+                   });
+        }
+
+        std::string upper(std::string address) {
+            std::transform(address.begin(), address.end(), address.begin(), [](unsigned char c) {
+                return static_cast<char>(std::toupper(c));
+            });
+            return address;
+        }
+    } // namespace
+
+    std::vector<std::string> supervised_extra_addresses(const Config& config) {
+        std::vector<std::string> out;
+        if (!config.enabled)
+            return out;
+        for (const auto& address : config.extra_devices)
+            if (!same_address(address, config.device_address))
+                out.push_back(address);
+        return out;
+    }
+
+    bool add_extra_device(Config& config, const std::string& address) {
+        if (address.empty() || same_address(address, config.device_address))
+            return false;
+        for (const auto& known : config.extra_devices)
+            if (same_address(known, address))
+                return false;
+        config.extra_devices.push_back(upper(address));
+        return true;
+    }
+
+    bool remove_extra_device(Config& config, const std::string& address) {
+        auto& list = config.extra_devices;
+        const auto before = list.size();
+        list.erase(std::remove_if(list.begin(),
+                                  list.end(),
+                                  [&](const std::string& known) { return same_address(known, address); }),
+                   list.end());
+        return list.size() != before;
     }
 
     Config load_config() {

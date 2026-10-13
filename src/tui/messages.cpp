@@ -57,7 +57,8 @@ namespace tether::tui {
                     const std::string preview = thread.value("preview", "");
                     const int unread = thread.value("unread", 0);
                     Row row;
-                    row.text = name + "\n  " + preview;
+                    const std::string phone = thread.value("device_name", "");
+                    row.text = (phone.empty() ? name : name + "  [" + phone + "]") + "\n  " + preview;
                     row.meta = ui::format_thread_time(thread.value("timestamp", static_cast<int64_t>(0)), now);
                     if (unread > 0)
                         row.meta += "  ●" + std::to_string(unread);

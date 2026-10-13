@@ -32,8 +32,10 @@ namespace tether::bluetooth {
 
         // Which of two spellings of one address to file the conversation under.
         bool better_key(const std::string& candidate, const std::string& current) {
-            const std::string a = candidate.substr(candidate.find(':') + 1);
-            const std::string b = current.substr(current.find(':') + 1);
+            const std::string bare_a = unscoped(candidate);
+            const std::string bare_b = unscoped(current);
+            const std::string a = bare_a.substr(bare_a.find(':') + 1);
+            const std::string b = bare_b.substr(bare_b.find(':') + 1);
             const bool a_plus = !a.empty() && a.front() == '+';
             const bool b_plus = !b.empty() && b.front() == '+';
             if (a_plus != b_plus)
@@ -240,6 +242,8 @@ namespace tether::bluetooth {
             {"timestamp", thread.last_timestamp},
             {"unread", thread.unread},
             {"count", thread.count},
+            // Which iPhone the conversation is on; empty for the primary one.
+            {"device", device_of(thread.key)},
         };
     }
 

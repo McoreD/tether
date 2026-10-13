@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-10 13:51-0700\n"
+"POT-Creation-Date: 2026-10-14 06:03+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Simplified Chinese\n"
@@ -131,6 +131,22 @@ msgstr "列出 iPhone 通讯录，或按姓名或号码搜索。"
 #: src/cli/main.cpp
 msgid "Pair with an iPhone over Bluetooth."
 msgstr "通过蓝牙与 iPhone 配对。"
+
+#: src/cli/main.cpp
+msgid ""
+"With --bt-pair, add the iPhone alongside the one already paired instead of "
+"replacing it. Its messages and contacts are mirrored too."
+msgstr ""
+"与 --bt-pair 一起使用时，将 iPhone 添加到已配对的 iPhone 旁边，而不是替换它。"
+"它的信息和联系人也会被镜像。"
+
+#: src/cli/main.cpp
+msgid "Mirror messages and contacts from another bonded iPhone as well."
+msgstr "同时镜像另一台已配对 iPhone 的信息和联系人。"
+
+#: src/cli/main.cpp
+msgid "Stop mirroring an iPhone added with --bt-add or --extra."
+msgstr "停止镜像通过 --bt-add 或 --extra 添加的 iPhone。"
 
 #: src/cli/main.cpp
 msgid ""
@@ -428,6 +444,10 @@ msgstr "正在连接"
 #: src/cli/main.cpp
 msgid "off (--bt-enable on)"
 msgstr "已关闭（--bt-enable on）"
+
+#: src/cli/main.cpp
+msgid "Also mirroring"
+msgstr "同时镜像"
 
 #: src/cli/main.cpp
 msgid "History"
@@ -990,6 +1010,20 @@ msgid "A Bluetooth address is required, e.g. --bt-pair AA:BB:CC:DD:EE:FF\n"
 msgstr "需要提供蓝牙地址，例如 --bt-pair AA:BB:CC:DD:EE:FF\n"
 
 #: src/cli/main.cpp
+msgid "A Bluetooth address is required, e.g. --bt-add AA:BB:CC:DD:EE:FF\n"
+msgstr "需要提供蓝牙地址，例如 --bt-add AA:BB:CC:DD:EE:FF\n"
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Mirroring {} as well."
+msgstr "同时镜像 {}。"
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Stopped mirroring {}."
+msgstr "已停止镜像 {}。"
+
+#: src/cli/main.cpp
 msgid "Expected on or off, e.g. --bt-enable off\n"
 msgstr "应为 on 或 off，例如 --bt-enable off\n"
 
@@ -1161,6 +1195,10 @@ msgstr "已通过 BR/EDR 和 LE 连接。"
 #: src/core/src/bluetooth/connection.cpp
 msgid "Nothing to send."
 msgstr "没有可发送的内容。"
+
+#: src/core/src/bluetooth/connection.cpp
+msgid "Group replies are only available on the primary iPhone."
+msgstr "群组回复仅在主 iPhone 上可用。"
 
 #: src/core/src/bluetooth/connection.cpp src/gtk/messages_view.cpp
 #: src/tui/messages.cpp

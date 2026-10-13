@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-10 13:51-0700\n"
+"POT-Creation-Date: 2026-10-14 06:03+0800\n"
 "PO-Revision-Date: 2026-08-23\n"
 "Last-Translator: Tether project\n"
 "Language-Team: Korean\n"
@@ -133,6 +133,22 @@ msgstr "iPhone 연락처를 나열하거나 이름 또는 번호로 검색합니
 #: src/cli/main.cpp
 msgid "Pair with an iPhone over Bluetooth."
 msgstr "Bluetooth로 iPhone과 페어링합니다."
+
+#: src/cli/main.cpp
+msgid ""
+"With --bt-pair, add the iPhone alongside the one already paired instead of "
+"replacing it. Its messages and contacts are mirrored too."
+msgstr ""
+"--bt-pair와 함께 사용하면 이미 페어링된 iPhone을 교체하지 않고 함께 추가합니"
+"다. 해당 iPhone의 메시지와 연락처도 미러링됩니다."
+
+#: src/cli/main.cpp
+msgid "Mirror messages and contacts from another bonded iPhone as well."
+msgstr "페어링된 다른 iPhone의 메시지와 연락처도 미러링합니다."
+
+#: src/cli/main.cpp
+msgid "Stop mirroring an iPhone added with --bt-add or --extra."
+msgstr "--bt-add 또는 --extra로 추가한 iPhone의 미러링을 중지합니다."
 
 #: src/cli/main.cpp
 msgid ""
@@ -438,6 +454,10 @@ msgstr "연결 중"
 #: src/cli/main.cpp
 msgid "off (--bt-enable on)"
 msgstr "꺼짐 (--bt-enable on)"
+
+#: src/cli/main.cpp
+msgid "Also mirroring"
+msgstr "추가 미러링 중"
 
 #: src/cli/main.cpp
 msgid "History"
@@ -1005,6 +1025,20 @@ msgid "A Bluetooth address is required, e.g. --bt-pair AA:BB:CC:DD:EE:FF\n"
 msgstr "Bluetooth 주소가 필요합니다. 예: --bt-pair AA:BB:CC:DD:EE:FF\n"
 
 #: src/cli/main.cpp
+msgid "A Bluetooth address is required, e.g. --bt-add AA:BB:CC:DD:EE:FF\n"
+msgstr "Bluetooth 주소가 필요합니다. 예: --bt-add AA:BB:CC:DD:EE:FF\n"
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Mirroring {} as well."
+msgstr "{}도 미러링합니다."
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Stopped mirroring {}."
+msgstr "{} 미러링을 중지했습니다."
+
+#: src/cli/main.cpp
 msgid "Expected on or off, e.g. --bt-enable off\n"
 msgstr "on 또는 off가 필요합니다. 예: --bt-enable off\n"
 
@@ -1185,6 +1219,10 @@ msgstr "BR/EDR과 LE로 연결되었습니다."
 #: src/core/src/bluetooth/connection.cpp
 msgid "Nothing to send."
 msgstr "보낼 것이 없습니다."
+
+#: src/core/src/bluetooth/connection.cpp
+msgid "Group replies are only available on the primary iPhone."
+msgstr "그룹 답장은 기본 iPhone에서만 사용할 수 있습니다."
 
 #: src/core/src/bluetooth/connection.cpp src/gtk/messages_view.cpp
 #: src/tui/messages.cpp

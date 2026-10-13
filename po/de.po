@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tether\n"
 "Report-Msgid-Bugs-To: zack@bartel.com\n"
-"POT-Creation-Date: 2026-10-10 13:51-0700\n"
+"POT-Creation-Date: 2026-10-14 06:03+0800\n"
 "PO-Revision-Date: 2026-08-22\n"
 "Last-Translator: Tether project\n"
 "Language-Team: German\n"
@@ -135,6 +135,26 @@ msgstr "Kontakte des iPhones auflisten oder nach Name oder Nummer durchsuchen."
 #: src/cli/main.cpp
 msgid "Pair with an iPhone over Bluetooth."
 msgstr "Ein iPhone per Bluetooth koppeln."
+
+#: src/cli/main.cpp
+msgid ""
+"With --bt-pair, add the iPhone alongside the one already paired instead of "
+"replacing it. Its messages and contacts are mirrored too."
+msgstr ""
+"Mit --bt-pair das iPhone zusätzlich zum bereits gekoppelten hinzufügen, "
+"statt es zu ersetzen. Seine Nachrichten und Kontakte werden ebenfalls "
+"gespiegelt."
+
+#: src/cli/main.cpp
+msgid "Mirror messages and contacts from another bonded iPhone as well."
+msgstr ""
+"Nachrichten und Kontakte eines weiteren gekoppelten iPhones ebenfalls "
+"spiegeln."
+
+#: src/cli/main.cpp
+msgid "Stop mirroring an iPhone added with --bt-add or --extra."
+msgstr ""
+"Spiegelung eines mit --bt-add oder --extra hinzugefügten iPhones beenden."
 
 #: src/cli/main.cpp
 msgid ""
@@ -449,6 +469,10 @@ msgstr "verbindet"
 #: src/cli/main.cpp
 msgid "off (--bt-enable on)"
 msgstr "aus (--bt-enable on)"
+
+#: src/cli/main.cpp
+msgid "Also mirroring"
+msgstr "Spiegelt außerdem"
 
 #: src/cli/main.cpp
 msgid "History"
@@ -1038,6 +1062,21 @@ msgstr ""
 "Eine Bluetooth-Adresse ist erforderlich, z. B. --bt-pair AA:BB:CC:DD:EE:FF\n"
 
 #: src/cli/main.cpp
+msgid "A Bluetooth address is required, e.g. --bt-add AA:BB:CC:DD:EE:FF\n"
+msgstr ""
+"Eine Bluetooth-Adresse ist erforderlich, z. B. --bt-add AA:BB:CC:DD:EE:FF\n"
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Mirroring {} as well."
+msgstr "{} wird ebenfalls gespiegelt."
+
+#: src/cli/main.cpp
+#, c++-format
+msgid "Stopped mirroring {}."
+msgstr "Spiegelung von {} beendet."
+
+#: src/cli/main.cpp
 msgid "Expected on or off, e.g. --bt-enable off\n"
 msgstr "Erwartet wurde on oder off, z. B. --bt-enable off\n"
 
@@ -1225,6 +1264,10 @@ msgstr "Über BR/EDR und LE verbunden."
 #: src/core/src/bluetooth/connection.cpp
 msgid "Nothing to send."
 msgstr "Nichts zu senden."
+
+#: src/core/src/bluetooth/connection.cpp
+msgid "Group replies are only available on the primary iPhone."
+msgstr "Gruppenantworten sind nur auf dem primären iPhone verfügbar."
 
 #: src/core/src/bluetooth/connection.cpp src/gtk/messages_view.cpp
 #: src/tui/messages.cpp

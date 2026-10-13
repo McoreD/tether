@@ -380,11 +380,28 @@ clients may omit the ID. Pairing runs asynchronously and reports through
 `bt_pair_progress` events, then one `bt_pair_result` (or `bt_unpair_result`).
 Only one pairing transaction runs at a time; a second returns
 `{"status": "busy"}`. A successful pair selects the device and starts
-supervision.
+supervision. With `"extra": true` and a phone already selected, a successful
+pair adds the device as an extra phone (see `bt_add_device`) instead.
 
 #### `bt_set_device` (Client -> Daemon)
 **Payload**: `{"command": "bt_set_device", "address": "AA:BB:CC:DD:EE:FF"}`
-Points supervision at an already-bonded phone.
+Points supervision at an already-bonded phone. That phone becomes the primary
+one and is dropped from the extra phones if it was listed there.
+
+#### `bt_add_device` / `bt_remove_device` (Client -> Daemon)
+**Payload**: `{"command": "bt_add_device", "address": "AA:BB:CC:DD:EE:FF"}`
+Mirrors messages and contacts from another bonded iPhone alongside the primary
+one, or stops. The list is persisted as `extra_devices` in `bluetooth.json`
+and reported in `bt_status`. Notifications, calls, call history and the away
+lock stay with the primary phone.
+
+An extra phone's thread keys and message handles are scoped to it:
+`dev:AA:BB:CC:DD:EE:FF/tel:+15551234567`. The primary phone's stay bare. Pass
+the scoped key back unchanged to `bt_list_messages`, `bt_send_message` and
+`bt_mark_read` and the request goes to the phone the conversation is on.
+Thread entries in `bt_threads` carry `device` (empty for the primary phone)
+and, for an extra phone, `device_name`. `bt_connection_changed` carries an
+`extra_devices` array with each extra phone's link and profile status.
 
 #### `bt_pair_progress` / `bt_pair_result` (Daemon -> Clients)
 `bt_pair_progress` carries `step` and `detail` for display during the transaction.

@@ -90,7 +90,17 @@ namespace tether::bluetooth {
         // actually carry ANCS is decided here rather than by the caller.
         void set_device(const std::string& address, bool ancs_enabled);
 
+        // Status of the primary phone, with an "extra_devices" array of the
+        // others when there are any.
         nlohmann::json status() const;
+
+        // The phone this manager supervises; empty while idle.
+        const std::string& address() const;
+
+        // Mirrors messages and contacts from further iPhones alongside this
+        // one. Phones already supervised keep their sessions; the rest are
+        // started or stopped to match.
+        void set_extra_devices(const std::vector<std::string>& addresses);
 
     private:
         bool start_locked(const std::string& address, bool ancs_enabled);

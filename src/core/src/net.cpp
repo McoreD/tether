@@ -40,6 +40,7 @@
 #include <ctime>
 #include <filesystem>
 #include <fstream>
+#include <map>
 #include <mutex>
 #include <nlohmann/json.hpp>
 #include <openssl/err.h>
@@ -416,6 +417,7 @@ namespace tether {
         status["available"] = bluetooth::g_bluez != nullptr && bluetooth::g_bluez->running();
         const auto config = bluetooth::load_config();
         status["device_address"] = config.device_address;
+        status["extra_devices"] = config.extra_devices;
         status["ancs_enabled"] = config.ancs_enabled;
         status["adapter"] = config.adapter;
         status["ancs_content_enabled"] = config.ancs_content_enabled;
@@ -634,7 +636,8 @@ namespace tether {
 
     static void run_bt_pair(const std::string& address,
                             std::optional<bluetooth::AuthStrategy> strategy,
-                            const std::string& operation_id) {
+                            const std::string& operation_id,
+                            bool as_extra) {
         if (!bluetooth::g_bluez) {
             nlohmann::json event;
             event["command"] = "bt_pair_result";
@@ -673,8 +676,16 @@ namespace tether {
             [operation_id](const std::string& code) { return ask_client_to_confirm(code, operation_id); },
             config.calls_enabled);
 
-        if (result.success) {
+        if (result.success && as_extra && !config.device_address.empty()) {
+            // A further iPhone joins the primary one instead of replacing it.
+            bluetooth::add_extra_device(config, result.device_address);
+            config.enabled = true;
+            bluetooth::save_config(config);
+            if (bluetooth::g_bt_connections)
+                bluetooth::g_bt_connections->set_extra_devices(bluetooth::supervised_extra_addresses(config));
+        } else if (result.success) {
             config.device_address = result.device_address;
+            bluetooth::remove_extra_device(config, result.device_address);
             // A dual bond proves mirroring can work, so it turns the preference back on.
             // A BR/EDR-only bond must not turn it off.
             if (result.dual_bond)
@@ -697,8 +708,10 @@ namespace tether {
     }
 
     static void restart_supervision(bluetooth::Config config) {
-        if (bluetooth::g_bt_connections)
+        if (bluetooth::g_bt_connections) {
             bluetooth::g_bt_connections->set_device(bluetooth::supervised_address(config), config.ancs_enabled);
+            bluetooth::g_bt_connections->set_extra_devices(bluetooth::supervised_extra_addresses(config));
+        }
         broadcast_local_event(build_bt_status().dump());
     }
 
@@ -711,6 +724,14 @@ namespace tether {
             return;
         }
         auto result = bluetooth::unpair_device(*bluetooth::g_bluez, address);
+        if (result.success) {
+            auto config = bluetooth::load_config();
+            if (bluetooth::remove_extra_device(config, address)) {
+                bluetooth::save_config(config);
+                if (bluetooth::g_bt_connections)
+                    bluetooth::g_bt_connections->set_extra_devices(bluetooth::supervised_extra_addresses(config));
+            }
+        }
         nlohmann::json event = bluetooth::to_json(result);
         event["command"] = "bt_unpair_result";
         set_operation_id(event, operation_id);
@@ -759,7 +780,18 @@ namespace tether {
         // Resolved after the store lock is released, not underneath it: deciding
         // who a group reply would go to reads the contacts, which the same lock
         // guards, and std::mutex is not recursive.
+        // Conversations from an extra iPhone are labelled with that phone's name.
+        std::map<std::string, std::string> phone_names;
+        if (bluetooth::g_bluez) {
+            for (const auto& device : bluetooth::g_bluez->snapshot().devices)
+                phone_names[device.address] = device.name.empty() ? device.address : device.name;
+        }
+
         for (auto& entry : threads) {
+            if (const std::string device = entry.value("device", ""); !device.empty()) {
+                auto known = phone_names.find(device);
+                entry["device_name"] = known == phone_names.end() ? device : known->second;
+            }
             if (!entry.value("group", false)) {
                 // An alphanumeric sender ID has no route back, so the composer must not accept text the phone would
                 // bounce.
@@ -1290,8 +1322,10 @@ namespace tether {
                         if (j.contains("strategy"))
                             strategy = bluetooth::auth_strategy_from_string(j["strategy"]);
                         const std::string operation_id = j.value("operation_id", std::string{});
-                        std::thread([address, strategy, operation_id]() {
-                            run_bt_pair(address, strategy, operation_id);
+                        // "extra": pair a further iPhone without replacing the primary one.
+                        const bool as_extra = j.value("extra", false);
+                        std::thread([address, strategy, operation_id, as_extra]() {
+                            run_bt_pair(address, strategy, operation_id, as_extra);
                         }).detach();
                     } else if (j.contains("command") && j["command"] == "bt_pair_confirm") {
                         bool matched = false;
@@ -1315,8 +1349,26 @@ namespace tether {
                     } else if (j.contains("command") && j["command"] == "bt_set_device" && j.contains("address")) {
                         auto config = bluetooth::load_config();
                         config.device_address = j["address"];
+                        bluetooth::remove_extra_device(config, config.device_address);
                         bluetooth::save_config(config);
                         std::thread(restart_supervision, config).detach();
+                    } else if (j.contains("command") &&
+                               (j["command"] == "bt_add_device" || j["command"] == "bt_remove_device") &&
+                               j.contains("address") && j["address"].is_string()) {
+                        // Mirrors an already bonded iPhone alongside the primary one, or stops.
+                        auto config = bluetooth::load_config();
+                        const std::string address = j["address"];
+                        const bool changed = j["command"] == "bt_add_device"
+                                                 ? bluetooth::add_extra_device(config, address)
+                                                 : bluetooth::remove_extra_device(config, address);
+                        if (changed)
+                            bluetooth::save_config(config);
+                        std::thread([config]() {
+                            if (bluetooth::g_bt_connections)
+                                bluetooth::g_bt_connections->set_extra_devices(
+                                    bluetooth::supervised_extra_addresses(config));
+                            broadcast_local_event(build_bt_status().dump());
+                        }).detach();
                     } else if (j.contains("command") && j["command"] == "bt_list_threads") {
                         std::string payload = build_bt_threads().dump() + "\n";
                         write_plain_packet(client_fd, payload);

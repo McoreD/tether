@@ -698,6 +698,7 @@ int main(int argc, char** argv) {
         });
 
         connections.start(tether::bluetooth::supervised_address(bt_config), bt_config.ancs_enabled);
+        connections.set_extra_devices(tether::bluetooth::supervised_extra_addresses(bt_config));
     } else {
         debug::log(INFO, "Bluetooth unavailable; messages and notifications are disabled");
     }
@@ -710,6 +711,7 @@ int main(int argc, char** argv) {
 
     // explicitly null globals to be safe during final stack unwinding
     tether::bluetooth::g_bt_connections = nullptr;
+    connections.set_extra_devices({});
     connections.stop();
     tether::bluetooth::g_bluez = nullptr;
     bluez.stop();

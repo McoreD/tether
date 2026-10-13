@@ -204,7 +204,12 @@ static const Opt kOptions[] = {
     {"--bt-messages <thread>", N_("Show messages in one conversation.")},
     {"--bt-send <thread> <text>", N_("Reply in one conversation.")},
     {"--bt-contacts [query]", N_("List iPhone contacts, or search them by name or number.")},
-    {"--bt-pair <addr> [--explicit-pair]", N_("Pair with an iPhone over Bluetooth.")},
+    {"--bt-pair <addr> [--explicit-pair] [--extra]", N_("Pair with an iPhone over Bluetooth.")},
+    {"--extra",
+     N_("With --bt-pair, add the iPhone alongside the one already paired instead of replacing it. Its "
+        "messages and contacts are mirrored too.")},
+    {"--bt-add <addr>", N_("Mirror messages and contacts from another bonded iPhone as well.")},
+    {"--bt-remove <addr>", N_("Stop mirroring an iPhone added with --bt-add or --extra.")},
     {"--explicit-pair",
      N_("Ask the iPhone to authenticate directly instead of connecting first. Tether falls back to this on "
         "its own; use it to skip straight there.")},
@@ -472,6 +477,13 @@ static int print_bt_status(tether::Client& client) {
                         resp.value("ancs_enabled", true) ? _("mirroring on")
                                                          : _("mirroring off (tether --bt-ancs on)"));
     fields.emplace_back(_("Tether"), resp.value("enabled", true) ? _("connecting") : _("off (--bt-enable on)"));
+    if (resp.contains("extra_devices") && resp["extra_devices"].is_array() && !resp["extra_devices"].empty()) {
+        std::string extras;
+        for (const auto& address : resp["extra_devices"])
+            if (address.is_string())
+                extras += (extras.empty() ? "" : ", ") + address.get<std::string>();
+        fields.emplace_back(_("Also mirroring"), extras);
+    }
 
     if (resp.value("retention", "encrypted") == "encrypted" && !resp.value("retention_ready", true))
         fields.emplace_back(_("History"),
@@ -972,7 +984,9 @@ static int print_bt_threads(tether::Client& client) {
                 format_time(t.value("timestamp", (int64_t)0)).c_str(),
                 preview.c_str(),
                 unread_note.c_str());
-        fprintf(stdout, "      %s\n", t.value("thread", "").c_str());
+        const std::string phone = t.value("device_name", "");
+        fprintf(
+            stdout, "      %s%s\n", t.value("thread", "").c_str(), phone.empty() ? "" : ("  [" + phone + "]").c_str());
     }
     return 0;
 }
@@ -1291,6 +1305,7 @@ int main(int argc, char* argv[]) {
 
     std::string action, arg_val, arg_val2, host = "";
     bool explicit_pair = false;
+    bool pair_extra = false;
     int port = 5134;
     int timeout_ms = 3000;
 
@@ -1418,6 +1433,12 @@ int main(int argc, char* argv[]) {
                 arg_val = argv[++i];
         } else if (arg == "--explicit-pair") {
             explicit_pair = true;
+        } else if (arg == "--extra") {
+            pair_extra = true;
+        } else if (arg == "--bt-add" || arg == "--bt-remove") {
+            action = arg == "--bt-add" ? "bt_add_device" : "bt_remove_device";
+            if (i + 1 < argc && argv[i + 1][0] != '-')
+                arg_val = argv[++i];
         } else if (arg == "--bt-unpair") {
             action = "bt_unpair";
             if (i + 1 < argc && argv[i + 1][0] != '-')
@@ -1681,7 +1702,27 @@ int main(int argc, char* argv[]) {
         nlohmann::json extra = nlohmann::json::object();
         if (action == "bt_pair" && explicit_pair)
             extra["strategy"] = "explicit-pair";
+        if (action == "bt_pair" && pair_extra)
+            extra["extra"] = true;
         return run_bt_transaction(client, action == "bt_pair" ? "bt_pair" : "bt_unpair", arg_val, extra);
+    } else if (action == "bt_add_device" || action == "bt_remove_device") {
+        if (arg_val.empty()) {
+            debug::log(ERR, _("A Bluetooth address is required, e.g. --bt-add AA:BB:CC:DD:EE:FF\n"));
+            return 1;
+        }
+        nlohmann::json request;
+        request["command"] = action;
+        request["address"] = arg_val;
+        if (!client.send(request.dump() + "\n")) {
+            debug::log(ERR, _("Could not reach the daemon.\n"));
+            return 1;
+        }
+        fprintf(stdout,
+                "%s\n",
+                tether::tr_format(action == "bt_add_device" ? _("Mirroring {} as well.") : _("Stopped mirroring {}."),
+                                  arg_val)
+                    .c_str());
+        return 0;
     } else if (action == "bt_solicit") {
         return run_bt_transaction(client, "bt_solicit");
     } else if (action == "bt_enable") {
